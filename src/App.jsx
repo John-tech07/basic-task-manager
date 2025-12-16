@@ -1,27 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddTask from "./components/AddTask";
 import Tasks from "./components/Tasks";
+import {v4} from "uuid";
 
 function App() {
-  const [tasks, setTasks] = useState([{
-    id: 1,
-    title: "Estudar React",
-    description: "Estudar React para ser um Dev Front-end",
-    isCompleted: false
-  },
-    {
-    id: 2,
-    title: "Ler a Bíblia",
-    description: "Ler a Bíblia diáriamente.",
-    isCompleted: false
-    },
-    {
-    id: 3,
-    title: "Treinar",
-    description: "Ir a academia para ser saudável",
-    isCompleted: false
-  }
-]);
+  const [tasks, setTasks] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || []
+  );
+
+useEffect(() => {
+  localStorage.setItem("tasks", JSON.stringify(tasks))
+}, [tasks])
+
+// useEffect(() => {
+//   const fetchTasks = async () => {
+//   // CHAMAR A API
+//   const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10', 
+//     {
+//      method: 'GET'
+//     }
+// );
+//   // PEGAR OS DADOS QUE ELA RETORNA
+//     const data = await response.json();
+
+//   // ARMAZENAR/PERSISTIR ESSES DADOS NO STATE
+//   setTasks(data)
+//   }
+//   fetchTasks()
+// }, []);
 
 function onTaskClick(taskId) {
   const newTasks = tasks.map(task => {
@@ -43,7 +49,7 @@ function onTaskClick(taskId) {
   
   function onAddTaskSubmit(title, description) {
     const newTasks = {
-      id: tasks.lenght + 1,
+      id: v4(),
       title,
       description,
       isCompleted: false,
@@ -55,7 +61,7 @@ function onTaskClick(taskId) {
     <div className="w-screen h-screen bg-slate-500 flex justify-center p-6">
       <div className="w-[500px] space-y-4">
         <h1 className="text-3xl text-slate-100 font-bold text-center">Gerenciador de Tarefas</h1>
-        <AddTask tasks={tasks} onAddTaskSubmit={onAddTaskSubmit}/>
+          <AddTask tasks={tasks} onAddTaskSubmit={onAddTaskSubmit} onDeleteTaskClick={onDeleteTaskClick}  />
         <Tasks 
         tasks={tasks} onTaskClick={onTaskClick} onDeleteTaskClick={onDeleteTaskClick} />
       </div>
