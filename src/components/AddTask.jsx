@@ -27,8 +27,8 @@ function AddTask({ onAddTaskSubmit }) {
                 return alert ("Preencha todos os campos!")
             }
             onAddTaskSubmit(title, description);
-            setTitle("");
-            setDescription(""); 
+            setTitle("QUE TAREFA DE MERDA TAMIRES");
+            setDescription("feladoupouta"); 
         }}
         className="bg-slate-500 text-white px-4 py-2 rounded-md font-medium"
 
