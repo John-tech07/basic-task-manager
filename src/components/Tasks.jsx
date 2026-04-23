@@ -73,11 +73,13 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
         );
     }
 
-    const filteredTasks = tasks.filter(task => {
-        if (filter === "pending")   return !task.isCompleted;
-        if (filter === "completed") return task.isCompleted;
-        return true;
-    });
+    const filteredTasks = tasks
+        .filter(task => {
+            if (filter === "pending")   return !task.isCompleted;
+            if (filter === "completed") return task.isCompleted;
+            return true;
+        })
+        .sort((a, b) => Number(a.isCompleted) - Number(b.isCompleted));
 
     const emptyMessages = {
         pending:   "Nenhuma tarefa pendente.",
