@@ -13,6 +13,7 @@ const FILTERS = [
 function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
     const navigate = useNavigate();
     const [filter, setFilter] = useState("all");
+    const [deletingId, setDeletingId] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [editTitle, setEditTitle] = useState("");
     const [editDescription, setEditDescription] = useState("");
@@ -42,6 +43,20 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
     function handleCancel() {
         setEditingId(null);
         setEditError("");
+    }
+
+    function handleDeleteRequest(taskId) {
+        setDeletingId(taskId);
+        setEditingId(null);
+    }
+
+    function handleDeleteConfirm(taskId) {
+        onDeleteTaskClick(taskId);
+        setDeletingId(null);
+    }
+
+    function handleDeleteCancel() {
+        setDeletingId(null);
     }
 
     function handleKeyDown(e, taskId) {
@@ -95,8 +110,22 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
             ) : (
                 <ul className="space-y-4 p-6">
                     {filteredTasks.map((task) => (
-                        <li key={task.id} className={editingId === task.id ? "flex flex-col gap-2" : "flex gap-2 min-w-0"}>
-                            {editingId === task.id ? (
+                        <li key={task.id} className={editingId === task.id || deletingId === task.id ? "flex flex-col gap-2" : "flex gap-2 min-w-0"}>
+                            {deletingId === task.id ? (
+                                <div className="flex items-center gap-2 bg-red-50 border border-red-200 p-2 rounded-md">
+                                    <p className="text-red-600 text-sm font-medium flex-1">Deletar esta tarefa?</p>
+                                    <Button onClick={handleDeleteCancel} aria-label="Cancelar exclusão">
+                                        <XIcon size={18} />
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleDeleteConfirm(task.id)}
+                                        className="bg-red-500 hover:bg-red-600"
+                                        aria-label="Confirmar exclusão"
+                                    >
+                                        <TrashIcon size={18} />
+                                    </Button>
+                                </div>
+                            ) : editingId === task.id ? (
                                 <>
                                     <Input
                                         value={editTitle}
@@ -146,7 +175,7 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
                                     <Button onClick={() => onSeeDetailsClick(task)} aria-label="Ver detalhes">
                                         <ChevronRightIcon size={18} />
                                     </Button>
-                                    <Button onClick={() => onDeleteTaskClick(task.id)} aria-label="Deletar tarefa">
+                                    <Button onClick={() => handleDeleteRequest(task.id)} aria-label="Deletar tarefa">
                                         <TrashIcon size={18} />
                                     </Button>
                                 </>
