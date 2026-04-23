@@ -1,6 +1,5 @@
 import { CheckCircle2, ChevronLeftIcon, Clock } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import Title from "../components/Title";
 
 function TaskPage() {
     const navigate = useNavigate();
@@ -18,40 +17,46 @@ function TaskPage() {
     const task = tasks.find(t => t.id === id);
 
     return (
-        <div className="min-h-screen w-screen bg-slate-500 p-4 sm:p-6">
+        <div className="min-h-screen bg-slate-100 p-4 sm:p-6">
             <div className="w-full max-w-[500px] mx-auto space-y-4">
-                <div className="flex justify-center relative mb-6">
+                <div className="flex items-center gap-3 py-4">
                     <button
                         onClick={() => navigate(-1)}
-                        className="text-slate-100 absolute left-0 top-0 bottom-0"
+                        className="p-2 rounded-lg bg-white shadow-sm text-slate-600 hover:text-indigo-600 transition-colors"
                         aria-label="Voltar"
                     >
-                        <ChevronLeftIcon />
+                        <ChevronLeftIcon size={20} />
                     </button>
-                    <Title>Detalhes da Tarefa</Title>
+                    <h1 className="text-xl font-bold text-slate-800">Detalhes da Tarefa</h1>
                 </div>
 
                 {task ? (
-                    <div className="bg-slate-200 p-4 rounded-md space-y-3">
-                        <h2 className="text-xl text-slate-600 font-bold">{task.title}</h2>
-                        <p className="text-slate-600">{task.description}</p>
-                        <div className={`flex items-center gap-1 text-sm font-medium ${task.isCompleted ? 'text-green-600' : 'text-slate-400'}`}>
-                            {task.isCompleted
-                                ? <><CheckCircle2 size={15} /> Concluída</>
-                                : <><Clock size={15} /> Pendente</>
-                            }
+                    <div className="bg-white rounded-xl shadow-md p-5 space-y-4">
+                        <div>
+                            <h2 className="text-lg font-bold text-slate-800">{task.title}</h2>
+                            {task.description && (
+                                <p className="text-slate-500 mt-1 text-sm">{task.description}</p>
+                            )}
                         </div>
-                        {task.createdAt && (
-                            <p className="text-xs text-slate-400">
-                                Criada em {new Intl.DateTimeFormat("pt-BR", {
-                                    day: "2-digit", month: "2-digit", year: "numeric",
-                                    hour: "2-digit", minute: "2-digit",
-                                }).format(new Date(task.createdAt))}
-                            </p>
-                        )}
+                        <div className="flex flex-col gap-2 pt-2 border-t border-slate-100">
+                            <div className={`flex items-center gap-1.5 text-sm font-medium ${task.isCompleted ? "text-indigo-600" : "text-slate-400"}`}>
+                                {task.isCompleted
+                                    ? <><CheckCircle2 size={16} /> Concluída</>
+                                    : <><Clock size={16} /> Pendente</>
+                                }
+                            </div>
+                            {task.createdAt && (
+                                <p className="text-xs text-slate-400">
+                                    Criada em {new Intl.DateTimeFormat("pt-BR", {
+                                        day: "2-digit", month: "2-digit", year: "numeric",
+                                        hour: "2-digit", minute: "2-digit",
+                                    }).format(new Date(task.createdAt))}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 ) : (
-                    <div className="bg-slate-200 p-4 rounded-md text-center text-slate-500">
+                    <div className="bg-white rounded-xl shadow-md p-5 text-center text-slate-400 text-sm">
                         Tarefa não encontrada.
                     </div>
                 )}

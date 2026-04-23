@@ -1,7 +1,9 @@
-function Title(props) {
-    return <h1 className="text-2xl sm:text-3xl text-slate-100 font-bold text-center">
-        {props.children}
-    </h1>
+function Title({ children }) {
+    return (
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 text-center">
+            {children}
+        </h1>
+    );
 }
 
 export default Title;

@@ -3,7 +3,6 @@ import { ClipboardList } from "lucide-react";
 import AddTask from "./components/AddTask";
 import Tasks from "./components/Tasks";
 import { v4 } from "uuid";
-import Title from "./components/Title";
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -59,12 +58,14 @@ function App() {
   }
 
   return (
-    <div className="w-screen min-h-screen bg-slate-500 flex justify-center p-4 sm:p-6">
-      <div className="w-full max-w-[500px] space-y-4">
-        <div className="flex items-center justify-center gap-2">
-          <ClipboardList className="text-slate-100" size={28} />
-          <Title>Gerenciador de Tarefas</Title>
-        </div>
+    <div className="min-h-screen bg-slate-100 p-4 sm:p-6">
+      <div className="w-full max-w-[500px] mx-auto space-y-4">
+        <header className="flex items-center justify-center gap-2 py-4">
+          <ClipboardList className="text-indigo-600" size={32} />
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
+            Gerenciador de Tarefas
+          </h1>
+        </header>
         <AddTask onAddTaskSubmit={onAddTaskSubmit} />
         <Tasks
           tasks={tasks}
