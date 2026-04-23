@@ -1,6 +1,6 @@
 import { AlertCircle, Plus } from "lucide-react";
-import Input from "./Input";
 import { useState } from "react";
+import Input from "../ui/Input";
 
 function AddTask({ onAddTaskSubmit }) {
     const [title, setTitle] = useState("");
@@ -30,7 +30,7 @@ function AddTask({ onAddTaskSubmit }) {
                 type="text"
                 placeholder="Descrição (opcional)"
                 value={description}
-                onChange={(e) => { setDescription(e.target.value); setError(""); }}
+                onChange={(e) => setDescription(e.target.value)}
             />
             {error && (
                 <p className="text-red-500 text-sm flex items-center gap-1">
