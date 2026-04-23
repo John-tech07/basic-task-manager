@@ -1,12 +1,52 @@
-import { CheckCircle2, ChevronRightIcon, Circle, ClipboardX, TrashIcon } from "lucide-react";
+import { AlertCircle, CheckIcon, CheckCircle2, ChevronRightIcon, Circle, ClipboardX, PencilIcon, TrashIcon, XIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Button from "./Button";
+import Input from "./Input";
 
-function Tasks({ tasks, onTaskClick, onDeleteTaskClick }) {
+const FILTERS = [
+    { value: "all",       label: "Todas"     },
+    { value: "pending",   label: "Pendentes" },
+    { value: "completed", label: "Concluídas"},
+];
+
+function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
     const navigate = useNavigate();
+    const [filter, setFilter] = useState("all");
+    const [editingId, setEditingId] = useState(null);
+    const [editTitle, setEditTitle] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+    const [editError, setEditError] = useState("");
 
     function onSeeDetailsClick(task) {
         navigate(`/task?id=${task.id}`);
+    }
+
+    function startEditing(task) {
+        setEditingId(task.id);
+        setEditTitle(task.title);
+        setEditDescription(task.description);
+        setEditError("");
+    }
+
+    function handleSave(taskId) {
+        if (!editTitle.trim()) {
+            setEditError("O título é obrigatório!");
+            return;
+        }
+        onEditTask(taskId, editTitle.trim(), editDescription.trim());
+        setEditingId(null);
+        setEditError("");
+    }
+
+    function handleCancel() {
+        setEditingId(null);
+        setEditError("");
+    }
+
+    function handleKeyDown(e, taskId) {
+        if (e.key === "Enter") handleSave(taskId);
+        if (e.key === "Escape") handleCancel();
     }
 
     if (!tasks.length) {
@@ -18,37 +58,104 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick }) {
         );
     }
 
+    const filteredTasks = tasks.filter(task => {
+        if (filter === "pending")   return !task.isCompleted;
+        if (filter === "completed") return task.isCompleted;
+        return true;
+    });
+
+    const emptyMessages = {
+        pending:   "Nenhuma tarefa pendente.",
+        completed: "Nenhuma tarefa concluída.",
+    };
+
     return (
-        <ul className="space-y-4 p-6 bg-slate-200 rounded-md shadow">
-            {tasks.map((task) => (
-                <li key={task.id} className="flex gap-2 min-w-0">
+        <div className="bg-slate-200 rounded-md shadow">
+            <div className="flex gap-2 p-4 border-b border-slate-300">
+                {FILTERS.map(f => (
                     <button
-                        onClick={() => onTaskClick(task.id)}
-                        className={`bg-slate-400 w-full min-w-0 text-left text-white p-2 flex items-center gap-2 rounded-md ${task.isCompleted && 'line-through opacity-70'}`}
+                        key={f.value}
+                        onClick={() => setFilter(f.value)}
+                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                            filter === f.value
+                                ? "bg-slate-500 text-white"
+                                : "bg-slate-300 text-slate-600 hover:bg-slate-400 hover:text-white"
+                        }`}
                     >
-                        <span className="shrink-0">
-                            {task.isCompleted
-                                ? <CheckCircle2 size={18} />
-                                : <Circle size={18} />
-                            }
-                        </span>
-                        <span className="truncate">{task.title}</span>
+                        {f.label}
                     </button>
-                    <Button
-                        onClick={() => onSeeDetailsClick(task)}
-                        aria-label="Ver detalhes"
-                    >
-                        <ChevronRightIcon size={18} />
-                    </Button>
-                    <Button
-                        onClick={() => onDeleteTaskClick(task.id)}
-                        aria-label="Deletar tarefa"
-                    >
-                        <TrashIcon size={18} />
-                    </Button>
-                </li>
-            ))}
-        </ul>
+                ))}
+            </div>
+
+            {filteredTasks.length === 0 ? (
+                <div className="p-6 flex flex-col items-center gap-2 text-slate-400">
+                    <ClipboardX size={36} />
+                    <p>{emptyMessages[filter]}</p>
+                </div>
+            ) : (
+                <ul className="space-y-4 p-6">
+                    {filteredTasks.map((task) => (
+                        <li key={task.id} className={editingId === task.id ? "flex flex-col gap-2" : "flex gap-2 min-w-0"}>
+                            {editingId === task.id ? (
+                                <>
+                                    <Input
+                                        value={editTitle}
+                                        onChange={(e) => { setEditTitle(e.target.value); setEditError(""); }}
+                                        onKeyDown={(e) => handleKeyDown(e, task.id)}
+                                        placeholder="Título"
+                                        autoFocus
+                                    />
+                                    <Input
+                                        value={editDescription}
+                                        onChange={(e) => setEditDescription(e.target.value)}
+                                        onKeyDown={(e) => handleKeyDown(e, task.id)}
+                                        placeholder="Descrição (opcional)"
+                                    />
+                                    {editError && (
+                                        <p className="text-red-500 text-sm flex items-center gap-1">
+                                            <AlertCircle size={14} />
+                                            {editError}
+                                        </p>
+                                    )}
+                                    <div className="flex gap-2 justify-end">
+                                        <Button onClick={handleCancel} aria-label="Cancelar edição">
+                                            <XIcon size={18} />
+                                        </Button>
+                                        <Button onClick={() => handleSave(task.id)} aria-label="Salvar edição">
+                                            <CheckIcon size={18} />
+                                        </Button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => onTaskClick(task.id)}
+                                        className={`bg-slate-400 w-full min-w-0 text-left text-white p-2 flex items-center gap-2 rounded-md ${task.isCompleted && "line-through opacity-70"}`}
+                                    >
+                                        <span className="shrink-0">
+                                            {task.isCompleted
+                                                ? <CheckCircle2 size={18} />
+                                                : <Circle size={18} />
+                                            }
+                                        </span>
+                                        <span className="truncate">{task.title}</span>
+                                    </button>
+                                    <Button onClick={() => startEditing(task)} aria-label="Editar tarefa">
+                                        <PencilIcon size={18} />
+                                    </Button>
+                                    <Button onClick={() => onSeeDetailsClick(task)} aria-label="Ver detalhes">
+                                        <ChevronRightIcon size={18} />
+                                    </Button>
+                                    <Button onClick={() => onDeleteTaskClick(task.id)} aria-label="Deletar tarefa">
+                                        <TrashIcon size={18} />
+                                    </Button>
+                                </>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
     );
 }
 

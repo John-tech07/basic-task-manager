@@ -37,6 +37,16 @@ function App() {
     setTasks(newTasks);
   }
 
+  function onEditTask(taskId, title, description) {
+    const newTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        return { ...task, title, description };
+      }
+      return task;
+    });
+    setTasks(newTasks);
+  }
+
   function onAddTaskSubmit(title, description) {
     const newTask = {
       id: v4(),
@@ -59,6 +69,7 @@ function App() {
           tasks={tasks}
           onTaskClick={onTaskClick}
           onDeleteTaskClick={onDeleteTaskClick}
+          onEditTask={onEditTask}
         />
       </div>
     </div>
