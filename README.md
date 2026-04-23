@@ -1,8 +1,29 @@
-# React + Vite
+# Gerenciador de Tarefas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web para gerenciamento de tarefas construída com React, Vite e Tailwind CSS.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Criar, editar e excluir tarefas
+- Marcar tarefas como concluídas
+- Filtrar por status (Todas, Pendentes, Concluídas)
+- Tela de detalhes de cada tarefa
+- Confirmação antes de excluir
+- Data de criação registrada automaticamente
+- Dados persistidos no localStorage
+- Layout responsivo
+
+## Tecnologias
+
+- React 18
+- Vite
+- Tailwind CSS
+- React Router v6
+- Lucide React
+
+## Como rodar
+
+```bash
+npm install
+npm run dev
+```
