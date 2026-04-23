@@ -7,8 +7,8 @@ function App() {
     const { tasks, addTask, toggleTask, editTask, deleteTask } = useTasks();
 
     return (
-        <div className="min-h-screen bg-slate-100 p-4 sm:p-6">
-            <div className="w-full max-w-[500px] mx-auto space-y-4">
+        <div className="min-h-screen bg-slate-100 flex flex-col items-center p-4 sm:p-6">
+            <div className="w-full max-w-[500px] space-y-4 my-auto">
                 <header className="flex items-center justify-center gap-2 py-4">
                     <ClipboardList className="text-indigo-600" size={32} />
                     <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
