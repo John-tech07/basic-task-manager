@@ -115,7 +115,7 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
                     <p>{emptyMessages[filter]}</p>
                 </div>
             ) : (
-                <ul className="space-y-4 p-6">
+                <ul className="space-y-4 p-6 max-h-96 overflow-y-auto">
                     {filteredTasks.map((task) => (
                         <li key={task.id} className={editingId === task.id || deletingId === task.id ? "flex flex-col gap-2" : "flex gap-2 min-w-0"}>
                             {deletingId === task.id ? (
