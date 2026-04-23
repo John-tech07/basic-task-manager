@@ -41,6 +41,14 @@ function TaskPage() {
                                 : <><Clock size={15} /> Pendente</>
                             }
                         </div>
+                        {task.createdAt && (
+                            <p className="text-xs text-slate-400">
+                                Criada em {new Intl.DateTimeFormat("pt-BR", {
+                                    day: "2-digit", month: "2-digit", year: "numeric",
+                                    hour: "2-digit", minute: "2-digit",
+                                }).format(new Date(task.createdAt))}
+                            </p>
+                        )}
                     </div>
                 ) : (
                     <div className="bg-slate-200 p-4 rounded-md text-center text-slate-500">

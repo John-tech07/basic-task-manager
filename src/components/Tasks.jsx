@@ -176,7 +176,14 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
                                                 : <Circle size={18} />
                                             }
                                         </span>
-                                        <span className="truncate">{task.title}</span>
+                                        <span className="flex flex-col min-w-0 flex-1">
+                                            <span className="truncate">{task.title}</span>
+                                            {task.createdAt && (
+                                                <span className="text-xs opacity-60">
+                                                    {new Intl.DateTimeFormat("pt-BR").format(new Date(task.createdAt))}
+                                                </span>
+                                            )}
+                                        </span>
                                     </button>
                                     <Button onClick={() => startEditing(task)} aria-label="Editar tarefa">
                                         <PencilIcon size={18} />

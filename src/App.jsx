@@ -53,6 +53,7 @@ function App() {
       title,
       description,
       isCompleted: false,
+      createdAt: new Date().toISOString(),
     };
     setTasks([...tasks, newTask]);
   }
