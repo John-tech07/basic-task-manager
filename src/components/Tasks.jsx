@@ -84,22 +84,29 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
         completed: "Nenhuma tarefa concluída.",
     };
 
+    const completedCount = tasks.filter(t => t.isCompleted).length;
+
     return (
         <div className="bg-slate-200 rounded-md shadow">
-            <div className="flex gap-2 p-4 border-b border-slate-300">
-                {FILTERS.map(f => (
-                    <button
-                        key={f.value}
-                        onClick={() => setFilter(f.value)}
-                        className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                            filter === f.value
-                                ? "bg-slate-500 text-white"
-                                : "bg-slate-300 text-slate-600 hover:bg-slate-400 hover:text-white"
-                        }`}
-                    >
-                        {f.label}
-                    </button>
-                ))}
+            <div className="flex items-center justify-between gap-2 p-4 border-b border-slate-300">
+                <div className="flex gap-2">
+                    {FILTERS.map(f => (
+                        <button
+                            key={f.value}
+                            onClick={() => setFilter(f.value)}
+                            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                                filter === f.value
+                                    ? "bg-slate-500 text-white"
+                                    : "bg-slate-300 text-slate-600 hover:bg-slate-400 hover:text-white"
+                            }`}
+                        >
+                            {f.label}
+                        </button>
+                    ))}
+                </div>
+                <span className="text-xs text-slate-500 whitespace-nowrap">
+                    {completedCount} de {tasks.length} concluída{tasks.length !== 1 ? "s" : ""}
+                </span>
             </div>
 
             {filteredTasks.length === 0 ? (
