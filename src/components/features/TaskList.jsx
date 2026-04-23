@@ -45,7 +45,7 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
             {filteredTasks.length === 0 ? (
                 <EmptyState message={emptyMessages[filter]} />
             ) : (
-                <ul className="divide-y divide-slate-100 max-h-96 overflow-y-auto">
+                <ul className="divide-y divide-slate-100 max-h-[60vh] overflow-y-auto">
                     {filteredTasks.map(task => (
                         <li key={task.id} className="p-3">
                             {deletingId === task.id ? (
