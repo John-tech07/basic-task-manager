@@ -1,73 +1,67 @@
 import { useEffect, useState } from "react";
+import { ClipboardList } from "lucide-react";
 import AddTask from "./components/AddTask";
 import Tasks from "./components/Tasks";
-import {v4} from "uuid";
+import { v4 } from "uuid";
 import Title from "./components/Title";
 
 function App() {
-  const [tasks, setTasks] = useState(
-    JSON.parse(localStorage.getItem("tasks")) || []
-  );
-
-useEffect(() => {
-  localStorage.setItem("tasks", JSON.stringify(tasks))
-}, [tasks])
-
-// useEffect(() => {
-//   const fetchTasks = async () => {
-//   // CHAMAR A API
-//   const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10', 
-//     {
-//      method: 'GET'
-//     }
-// );
-//   // PEGAR OS DADOS QUE ELA RETORNA
-//     const data = await response.json();
-
-//   // ARMAZENAR/PERSISTIR ESSES DADOS NO STATE
-//   setTasks(data)
-//   }
-//   fetchTasks()
-// }, []);
-
-function onTaskClick(taskId) {
-  const newTasks = tasks.map(task => {
-    if (task.id === taskId) {
-      return {...task, isCompleted: !task.isCompleted}
+  const [tasks, setTasks] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("tasks")) || [];
+    } catch {
+      return [];
     }
-  
-
-    return task;
   });
-  setTasks(newTasks);
-}
-  
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    } catch {
+      // localStorage indisponível (ex: modo privado restrito)
+    }
+  }, [tasks]);
+
+  function onTaskClick(taskId) {
+    const newTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        return { ...task, isCompleted: !task.isCompleted };
+      }
+      return task;
+    });
+    setTasks(newTasks);
+  }
 
   function onDeleteTaskClick(taskId) {
-    const newTasks = tasks.filter(task => task.id != taskId);
-      setTasks(newTasks);
-    } 
-  
+    const newTasks = tasks.filter(task => task.id !== taskId);
+    setTasks(newTasks);
+  }
+
   function onAddTaskSubmit(title, description) {
-    const newTasks = {
+    const newTask = {
       id: v4(),
       title,
       description,
       isCompleted: false,
     };
-    setTasks([...tasks, newTasks])
+    setTasks([...tasks, newTask]);
   }
 
   return (
-    <div className="w-screen h-screen bg-slate-500 flex justify-center p-6">
-      <div className="w-[500px] space-y-4">
-        <Title>Gerenciador de Tarefas</Title>
-          <AddTask tasks={tasks} onAddTaskSubmit={onAddTaskSubmit} onDeleteTaskClick={onDeleteTaskClick}  />
-        <Tasks 
-        tasks={tasks} onTaskClick={onTaskClick} onDeleteTaskClick={onDeleteTaskClick} />
+    <div className="w-screen min-h-screen bg-slate-500 flex justify-center p-4 sm:p-6">
+      <div className="w-full max-w-[500px] space-y-4">
+        <div className="flex items-center justify-center gap-2">
+          <ClipboardList className="text-slate-100" size={28} />
+          <Title>Gerenciador de Tarefas</Title>
+        </div>
+        <AddTask onAddTaskSubmit={onAddTaskSubmit} />
+        <Tasks
+          tasks={tasks}
+          onTaskClick={onTaskClick}
+          onDeleteTaskClick={onDeleteTaskClick}
+        />
       </div>
     </div>
-
   );
 }
 
