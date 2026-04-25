@@ -48,6 +48,12 @@ export function useTasks() {
             setLoading(true);
             await migrateFromLocalStorage(user.id);
 
+            const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+            await supabase.from("tasks")
+                .delete()
+                .eq("is_completed", true)
+                .lt("created_at", sevenDaysAgo);
+
             const { data, error } = await supabase
                 .from("tasks")
                 .select("*")

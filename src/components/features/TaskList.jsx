@@ -72,6 +72,9 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
                     ))}
                 </ul>
             )}
+            <p className="text-xs text-slate-400 text-center py-2">
+                Tarefas concluídas são deletadas automaticamente após 7 dias.
+            </p>
         </div>
     );
 }
