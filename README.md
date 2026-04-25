@@ -1,29 +1,27 @@
 # Gerenciador de Tarefas
 
-Aplicação web para gerenciamento de tarefas construída com React, Vite e Tailwind CSS.
+Aplicação web para criação e gerenciamento de tarefas pessoais. Cada usuário possui sua própria lista isolada, com suporte a título customizável, descrição, prazo e filtros por status.
 
-## Funcionalidades
+## Problema resolvido
 
-- Criar, editar e excluir tarefas
-- Marcar tarefas como concluídas
-- Filtrar por status (Todas, Pendentes, Concluídas)
-- Tela de detalhes de cada tarefa
-- Confirmação antes de excluir
-- Data de criação registrada automaticamente
-- Dados persistidos no localStorage
-- Layout responsivo
+Organização pessoal de tarefas com persistência em nuvem, acessível de qualquer dispositivo após autenticação.
 
-## Tecnologias
+## Usuários
 
-- React 18
-- Vite
-- Tailwind CSS
-- React Router v6
-- Lucide React
+Qualquer pessoa que se cadastre na aplicação. Não há papéis (roles) ou hierarquia de usuários.
 
-## Como rodar
+## Stack
 
-```bash
-npm install
-npm run dev
-```
+| Camada | Tecnologia |
+|---|---|
+| Frontend | React 18.3 + Vite 5.4 + Tailwind CSS 3.4 |
+| Roteamento | React Router DOM 6.26 |
+| Ícones | Lucide React 0.435 |
+| Backend / Auth | Supabase (BaaS) |
+| Banco de dados | PostgreSQL (gerenciado pelo Supabase) |
+| Hospedagem | Vercel (frontend) + Supabase Cloud (banco) |
+
+## Documentação
+
+- [Referência Técnica](referencia-tecnica.md) — arquitetura, stack, componentes, banco de dados, autenticação e operações de dados
+- [Guia Operacional](guia-operacional.md) — setup local, variáveis de ambiente, deploy e decisões técnicas
