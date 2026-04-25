@@ -42,7 +42,7 @@ function TaskEditForm({ task, onSave, onCancel }) {
                     {error}
                 </p>
             )}
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-1.5 sm:gap-2 justify-end">
                 <Button onClick={onCancel} aria-label="Cancelar edição">
                     <XIcon size={16} />
                 </Button>

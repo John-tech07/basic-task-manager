@@ -47,7 +47,7 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
             ) : (
                 <ul className="divide-y divide-slate-100 max-h-[60vh] overflow-y-auto">
                     {filteredTasks.map(task => (
-                        <li key={task.id} className="p-3">
+                        <li key={task.id} className="px-3 py-2 sm:p-3">
                             {deletingId === task.id ? (
                                 <TaskDeleteConfirm
                                     onConfirm={() => { onDeleteTaskClick(task.id); setDeletingId(null); }}

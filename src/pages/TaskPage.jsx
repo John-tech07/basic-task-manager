@@ -17,17 +17,17 @@ function TaskPage() {
     const task = tasks.find(t => t.id === id);
 
     return (
-        <div className="min-h-screen bg-slate-100 p-4 sm:p-6">
-            <div className="w-full max-w-[500px] mx-auto space-y-4">
-                <div className="flex items-center gap-3 py-4">
+        <div className="min-h-screen bg-slate-100 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <div className="w-full max-w-lg mx-auto space-y-4">
+                <div className="flex items-center gap-3 py-2">
                     <button
                         onClick={() => navigate(-1)}
-                        className="p-2 rounded-lg bg-white shadow-sm text-slate-600 hover:text-indigo-600 transition-colors"
+                        className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-white shadow-sm text-slate-600 hover:text-indigo-600 transition-colors"
                         aria-label="Voltar"
                     >
                         <ChevronLeftIcon size={20} />
                     </button>
-                    <h1 className="text-xl font-bold text-slate-800">Detalhes da Tarefa</h1>
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Detalhes da Tarefa</h1>
                 </div>
 
                 {task ? (

@@ -40,7 +40,7 @@ function AddTask({ onAddTaskSubmit }) {
             )}
             <button
                 onClick={handleSubmit}
-                className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white px-4 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors"
+                className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full min-h-[44px] px-4 py-3 rounded-lg text-sm sm:text-base font-semibold flex items-center justify-center gap-2 transition-colors"
             >
                 <Plus size={18} />
                 Adicionar tarefa
