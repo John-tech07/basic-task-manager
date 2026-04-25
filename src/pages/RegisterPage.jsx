@@ -32,7 +32,11 @@ function RegisterPage() {
             await signUp(email, password);
             setDone(true);
         } catch (err) {
-            setError(err.message || "Erro ao criar conta. Tente novamente.");
+            if (err.message?.toLowerCase().includes("rate limit")) {
+                setError("Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.");
+            } else {
+                setError(err.message || "Erro ao criar conta. Tente novamente.");
+            }
         } finally {
             setLoading(false);
         }

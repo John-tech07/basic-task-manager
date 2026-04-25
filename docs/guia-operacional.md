@@ -74,6 +74,22 @@ Sem isso, links de recuperação de senha não funcionam em produção.
 
 ---
 
+## Limites do plano gratuito (Supabase)
+
+| Recurso | Limite |
+|---|---|
+| Egresso de dados (API) | 500 MB / mês |
+| Conexões simultâneas ao banco | 60 |
+| E-mails de autenticação | 3 por hora |
+| Tamanho do banco | 500 MB |
+| Usuários | Ilimitados |
+
+**Estimativa de uso:** cada requisição de listagem consome ~500 bytes por tarefa retornada. Com 6 usuários abrindo o app ~30 vezes ao dia e ~50 tarefas cada, o consumo mensal fica em torno de **150 MB** — dentro do limite com margem.
+
+O gargalo mais provável no dia a dia é o **limite de e-mails** (3/hora), que afeta cadastro e recuperação de senha durante testes intensivos.
+
+---
+
 ## Decisões técnicas
 
 **Supabase como backend completo** — elimina servidor Node.js, auth e banco separados. Trade-off: toda autorização depende das políticas RLS.

@@ -20,7 +20,11 @@ function ForgotPasswordPage() {
             await sendPasswordReset(email);
             setDone(true);
         } catch (err) {
-            setError("Não foi possível enviar o e-mail. Verifique o endereço.");
+            if (err.message?.toLowerCase().includes("rate limit")) {
+                setError("Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.");
+            } else {
+                setError("Não foi possível enviar o e-mail. Verifique o endereço.");
+            }
         } finally {
             setLoading(false);
         }
