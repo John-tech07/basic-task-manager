@@ -10,7 +10,7 @@ function TaskDeleteConfirm({ onConfirm, onCancel }) {
             </Button>
             <Button
                 onClick={onConfirm}
-                className="bg-red-500 hover:bg-red-600 text-white"
+                className="!bg-red-500 hover:!bg-red-600 !text-white"
                 aria-label="Confirmar exclusão"
             >
                 <TrashIcon size={16} />

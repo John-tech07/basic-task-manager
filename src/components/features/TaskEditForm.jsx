@@ -48,7 +48,7 @@ function TaskEditForm({ task, onSave, onCancel }) {
                 </Button>
                 <Button
                     onClick={handleSave}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                    className="!bg-indigo-600 hover:!bg-indigo-700 !text-white"
                     aria-label="Salvar edição"
                 >
                     <CheckIcon size={16} />
