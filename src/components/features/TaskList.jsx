@@ -56,7 +56,7 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask }) {
                             ) : editingId === task.id ? (
                                 <TaskEditForm
                                     task={task}
-                                    onSave={(id, title, desc) => { onEditTask(id, title, desc); setEditingId(null); }}
+                                    onSave={(id, title, desc, dueAt) => { onEditTask(id, title, desc, dueAt); setEditingId(null); }}
                                     onCancel={() => setEditingId(null)}
                                 />
                             ) : (

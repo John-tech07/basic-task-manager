@@ -1,4 +1,4 @@
-import { CheckCircle2, ChevronRightIcon, Circle, PencilIcon, TrashIcon } from "lucide-react";
+import { CalendarIcon, CheckCircle2, ChevronRightIcon, Circle, PencilIcon, TrashIcon } from "lucide-react";
 import Button from "../ui/Button";
 
 function TaskItem({ task, onToggle, onEdit, onSeeDetails, onDeleteRequest }) {
@@ -22,6 +22,19 @@ function TaskItem({ task, onToggle, onEdit, onSeeDetails, onDeleteRequest }) {
                     {task.createdAt && (
                         <span className="text-xs text-slate-400">
                             {new Intl.DateTimeFormat("pt-BR").format(new Date(task.createdAt))}
+                        </span>
+                    )}
+                    {task.dueAt && (
+                        <span className={`text-xs flex items-center gap-1 mt-0.5 ${
+                            !task.isCompleted && new Date(task.dueAt) < new Date()
+                                ? "text-red-400"
+                                : "text-indigo-400"
+                        }`}>
+                            <CalendarIcon size={11} />
+                            {new Intl.DateTimeFormat("pt-BR", {
+                                day: "2-digit", month: "2-digit", year: "numeric",
+                                hour: "2-digit", minute: "2-digit",
+                            }).format(new Date(task.dueAt))}
                         </span>
                     )}
                 </span>

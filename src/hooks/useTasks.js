@@ -1,48 +1,110 @@
 import { useEffect, useState } from "react";
-import { v4 } from "uuid";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../contexts/AuthContext";
+
+function toApp(row) {
+    return {
+        id: row.id,
+        title: row.title,
+        description: row.description ?? "",
+        isCompleted: row.is_completed,
+        createdAt: row.created_at,
+        dueAt: row.due_at ?? null,
+    };
+}
+
+async function migrateFromLocalStorage(userId) {
+    let local;
+    try {
+        local = JSON.parse(localStorage.getItem("tasks"));
+    } catch {
+        return;
+    }
+    if (!Array.isArray(local) || local.length === 0) return;
+
+    const rows = local.map(t => ({
+        id: t.id,
+        user_id: userId,
+        title: t.title,
+        description: t.description ?? "",
+        is_completed: t.isCompleted ?? false,
+        created_at: t.createdAt ?? new Date().toISOString(),
+    }));
+
+    const { error } = await supabase.from("tasks").upsert(rows, { onConflict: "id" });
+    if (!error) localStorage.removeItem("tasks");
+}
 
 export function useTasks() {
-    const [tasks, setTasks] = useState(() => {
-        try {
-            return JSON.parse(localStorage.getItem("tasks")) || [];
-        } catch {
-            return [];
-        }
-    });
+    const { user } = useAuth();
+    const [tasks, setTasks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        try {
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-        } catch {
-            // localStorage indisponível (ex: modo privado restrito)
+        if (!user) return;
+
+        async function init() {
+            setLoading(true);
+            await migrateFromLocalStorage(user.id);
+
+            const { data, error } = await supabase
+                .from("tasks")
+                .select("*")
+                .order("created_at", { ascending: true });
+
+            if (error) setError(error.message);
+            else setTasks((data ?? []).map(toApp));
+
+            setLoading(false);
         }
-    }, [tasks]);
 
-    function addTask(title, description) {
-        setTasks(prev => [...prev, {
-            id: v4(),
-            title,
-            description,
-            isCompleted: false,
-            createdAt: new Date().toISOString(),
-        }]);
+        init();
+    }, [user]);
+
+    async function addTask(title, description, dueAt) {
+        const { data, error } = await supabase
+            .from("tasks")
+            .insert({ user_id: user.id, title, description: description ?? "", due_at: dueAt || null })
+            .select()
+            .single();
+
+        if (!error) setTasks(prev => [...prev, toApp(data)]);
     }
 
-    function toggleTask(taskId) {
-        setTasks(prev => prev.map(task =>
-            task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
-        ));
+    async function toggleTask(taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        const { error } = await supabase
+            .from("tasks")
+            .update({ is_completed: !task.isCompleted })
+            .eq("id", taskId);
+
+        if (!error) setTasks(prev =>
+            prev.map(t => t.id === taskId ? { ...t, isCompleted: !t.isCompleted } : t)
+        );
     }
 
-    function editTask(taskId, title, description) {
-        setTasks(prev => prev.map(task =>
-            task.id === taskId ? { ...task, title, description } : task
-        ));
+    async function editTask(taskId, title, description, dueAt) {
+        const { error } = await supabase
+            .from("tasks")
+            .update({ title, description, due_at: dueAt || null })
+            .eq("id", taskId);
+
+        if (!error) setTasks(prev =>
+            prev.map(t => t.id === taskId ? { ...t, title, description, dueAt: dueAt || null } : t)
+        );
     }
 
-    function deleteTask(taskId) {
-        setTasks(prev => prev.filter(task => task.id !== taskId));
+    async function deleteTask(taskId) {
+        const { error } = await supabase
+            .from("tasks")
+            .delete()
+            .eq("id", taskId);
+
+        if (!error) setTasks(prev => prev.filter(t => t.id !== taskId));
     }
 
-    return { tasks, addTask, toggleTask, editTask, deleteTask };
+    return { tasks, loading, error, addTask, toggleTask, editTask, deleteTask };
 }
