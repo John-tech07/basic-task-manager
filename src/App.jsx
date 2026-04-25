@@ -1,4 +1,4 @@
-import { ClipboardList, UserCircle, LogOut } from "lucide-react";
+import { ClipboardList, UserCircle, LogOut, PencilIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AddTask from "./components/features/AddTask";
 import TaskList from "./components/features/TaskList";
@@ -60,10 +60,9 @@ function App() {
     return (
         <div className="min-h-screen bg-slate-100 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <div className="w-full max-w-4xl mx-auto">
-                <header className="flex items-center gap-2 py-6 sm:py-8 lg:py-10">
-                    <ClipboardList className="text-indigo-600 shrink-0" size={28} />
-
-                    <div className="flex-1 min-w-0">
+                <header className="relative flex items-center justify-center py-6 sm:py-8 lg:py-10">
+                    <div className="flex items-center gap-2 px-14">
+                        <ClipboardList className="text-indigo-600 shrink-0" size={28} />
                         {isEditingTitle ? (
                             <input
                                 autoFocus
@@ -75,17 +74,16 @@ function App() {
                                 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 bg-transparent border-b-2 border-indigo-400 focus:outline-none placeholder-slate-300 w-full max-w-xs sm:max-w-sm"
                             />
                         ) : (
-                            <h1
-                                onClick={startEditing}
-                                title="Clique para editar"
-                                className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 cursor-pointer hover:text-indigo-600 transition-colors truncate"
-                            >
-                                {title || <span className="text-slate-300 font-normal">Título da Lista</span>}
-                            </h1>
+                            <div className="flex items-center gap-2 group cursor-pointer" onClick={startEditing}>
+                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 group-hover:text-indigo-600 transition-colors break-words">
+                                    {title || <span className="text-slate-300 font-normal">Título da Lista</span>}
+                                </h1>
+                                <PencilIcon size={16} className="text-slate-400 group-hover:text-indigo-500 transition-colors shrink-0" />
+                            </div>
                         )}
                     </div>
 
-                    <div className="relative shrink-0" ref={menuRef}>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2" ref={menuRef}>
                         <button
                             onClick={() => setMenuOpen(o => !o)}
                             className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-white transition-colors"

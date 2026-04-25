@@ -5,7 +5,8 @@ create table tasks (
   title text not null,
   description text default '',
   is_completed boolean default false,
-  created_at timestamptz default now()
+  created_at timestamptz default now(),
+  due_at timestamptz
 );
 
 -- Cada usuário só enxerga e manipula suas próprias tarefas

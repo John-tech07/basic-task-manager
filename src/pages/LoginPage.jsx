@@ -28,7 +28,7 @@ function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+        <div className="min-h-screen bg-slate-100 flex items-start justify-center px-4 pt-16 sm:pt-24">
             <div className="w-full max-w-sm">
                 <div className="flex items-center justify-center gap-2 mb-8">
                     <ClipboardList className="text-indigo-600" size={28} />

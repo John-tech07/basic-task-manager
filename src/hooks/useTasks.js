@@ -9,6 +9,7 @@ function toApp(row) {
         description: row.description ?? "",
         isCompleted: row.is_completed,
         createdAt: row.created_at,
+        dueAt: row.due_at ?? null,
     };
 }
 
@@ -61,10 +62,10 @@ export function useTasks() {
         init();
     }, [user]);
 
-    async function addTask(title, description) {
+    async function addTask(title, description, dueAt) {
         const { data, error } = await supabase
             .from("tasks")
-            .insert({ user_id: user.id, title, description: description ?? "" })
+            .insert({ user_id: user.id, title, description: description ?? "", due_at: dueAt || null })
             .select()
             .single();
 
@@ -85,14 +86,14 @@ export function useTasks() {
         );
     }
 
-    async function editTask(taskId, title, description) {
+    async function editTask(taskId, title, description, dueAt) {
         const { error } = await supabase
             .from("tasks")
-            .update({ title, description })
+            .update({ title, description, due_at: dueAt || null })
             .eq("id", taskId);
 
         if (!error) setTasks(prev =>
-            prev.map(t => t.id === taskId ? { ...t, title, description } : t)
+            prev.map(t => t.id === taskId ? { ...t, title, description, dueAt: dueAt || null } : t)
         );
     }
 
