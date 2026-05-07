@@ -21,8 +21,8 @@ cp .env.example .env.local   # preencher com as credenciais abaixo
 
 | Variável | Onde obter |
 |---|---|
-| `VITE_SUPABASE_URL` | Supabase → Settings → General → Project URL |
-| `VITE_SUPABASE_ANON_KEY` | Supabase → Settings → API Keys → Publishable key |
+| `VITE_SUPABASE_URL` | Supabase → Settings → General → **Project URL** (apenas a URL base, sem `/rest/v1/`) |
+| `VITE_SUPABASE_ANON_KEY` | Supabase → Settings → API Keys → **Publishable key** |
 
 Arquivo `.env.local` (não commitado — coberto por `*.local` no `.gitignore`):
 
@@ -30,6 +30,8 @@ Arquivo `.env.local` (não commitado — coberto por `*.local` no `.gitignore`):
 VITE_SUPABASE_URL=https://seu-projeto.supabase.co
 VITE_SUPABASE_ANON_KEY=sb_publishable_sua_chave
 ```
+
+> **Atenção:** A URL deve ser somente a base do projeto. Não inclua `/rest/v1/` ou qualquer outro caminho.
 
 A `VITE_SUPABASE_ANON_KEY` é pública por design — o RLS no banco impede acesso a dados de outros usuários mesmo com ela.
 
@@ -40,6 +42,11 @@ No painel do Supabase, **SQL Editor** → execute o conteúdo de `supabase/schem
 Se o banco já existia sem a coluna `due_at`:
 ```sql
 ALTER TABLE tasks ADD COLUMN due_at timestamptz;
+```
+
+Se o banco já existia sem a coluna `position` (reordenação manual):
+```sql
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS position integer;
 ```
 
 ---
@@ -109,3 +116,7 @@ O gargalo mais provável no dia a dia é o **limite de e-mails** (3/hora), que a
 **Sem migrations** — schema aplicado manualmente via SQL Editor. Alterações futuras precisam ser executadas manualmente em cada ambiente.
 
 **Online-only** — sem cache local, service worker ou sync offline. Decisão intencional para manter a implementação simples.
+
+**Tema claro/escuro via classe CSS** — Tailwind configurado com `darkMode: 'class'`. O hook `useTheme` aplica/remove a classe `dark` em `document.documentElement` e persiste no `localStorage`. Script inline no `index.html` evita flash do tema errado (FOUC) ao carregar a página.
+
+**Reordenação com `@dnd-kit`** — biblioteca escolhida por ser mantida, leve e construída para React (ao contrário de `react-beautiful-dnd`, que está depreciada). A ordem é persistida na coluna `position` da tabela `tasks` via upsert em lote. Drag desabilitado em views filtradas para evitar ambiguidade de posição.

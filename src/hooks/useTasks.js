@@ -10,6 +10,7 @@ function toApp(row) {
         isCompleted: row.is_completed,
         createdAt: row.created_at,
         dueAt: row.due_at ?? null,
+        position: row.position ?? null,
     };
 }
 
@@ -57,11 +58,25 @@ export function useTasks() {
             const { data, error } = await supabase
                 .from("tasks")
                 .select("*")
+                .order("position", { ascending: true, nullsFirst: false })
                 .order("created_at", { ascending: true });
 
-            if (error) setError(error.message);
-            else setTasks((data ?? []).map(toApp));
+            if (error) {
+                setError(error.message);
+                setLoading(false);
+                return;
+            }
 
+            const mapped = (data ?? []).map(toApp);
+
+            const hasNullPositions = mapped.some(t => t.position === null);
+            if (hasNullPositions) {
+                const updates = mapped.map((t, i) => ({ id: t.id, position: i + 1 }));
+                await supabase.from("tasks").upsert(updates, { onConflict: "id" });
+                mapped.forEach((t, i) => { t.position = i + 1; });
+            }
+
+            setTasks(mapped);
             setLoading(false);
         }
 
@@ -69,9 +84,13 @@ export function useTasks() {
     }, [user]);
 
     async function addTask(title, description, dueAt) {
+        const nextPosition = tasks.length > 0
+            ? Math.max(...tasks.map(t => t.position ?? 0)) + 1
+            : 1;
+
         const { data, error } = await supabase
             .from("tasks")
-            .insert({ user_id: user.id, title, description: description ?? "", due_at: dueAt || null })
+            .insert({ user_id: user.id, title, description: description ?? "", due_at: dueAt || null, position: nextPosition })
             .select()
             .single();
 
@@ -112,5 +131,11 @@ export function useTasks() {
         if (!error) setTasks(prev => prev.filter(t => t.id !== taskId));
     }
 
-    return { tasks, loading, error, addTask, toggleTask, editTask, deleteTask };
+    async function reorderTasks(newOrderedTasks) {
+        setTasks(newOrderedTasks);
+        const updates = newOrderedTasks.map((t, i) => ({ id: t.id, position: i + 1 }));
+        await supabase.from("tasks").upsert(updates, { onConflict: "id" });
+    }
+
+    return { tasks, loading, error, addTask, toggleTask, editTask, deleteTask, reorderTasks };
 }

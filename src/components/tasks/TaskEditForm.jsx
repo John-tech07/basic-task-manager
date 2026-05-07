@@ -62,7 +62,7 @@ function TaskEditForm({ task, onSave, onCancel }) {
                 type="button"
                 onClick={handleToggleDue}
                 className={`cursor-pointer flex items-center gap-1.5 text-xs font-medium transition-colors w-fit ${
-                    showDue ? "text-red-400 hover:text-red-500" : "text-slate-400 hover:text-indigo-500"
+                    showDue ? "text-red-400 hover:text-red-500" : "text-slate-400 dark:text-slate-500 hover:text-indigo-500 dark:hover:text-indigo-400"
                 }`}
             >
                 <CalendarIcon size={13} />

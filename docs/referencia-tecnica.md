@@ -10,6 +10,9 @@
 | React Router DOM | 6.26.1 |
 | Lucide React | 0.435.0 |
 | @supabase/supabase-js | 2.104.1 |
+| @dnd-kit/core | — |
+| @dnd-kit/sortable | — |
+| @dnd-kit/utilities | — |
 | Linguagem | JavaScript (JSX) — sem TypeScript |
 | Hospedagem | Vercel (CDN estático) |
 | Backend | Supabase Cloud (BaaS) |
@@ -41,7 +44,9 @@ src/
 ├── index.css                  # Tailwind base
 ├── lib/supabase.js            # Instância única do cliente Supabase
 ├── contexts/AuthContext.jsx   # Estado global de autenticação
-├── hooks/useTasks.js          # CRUD de tarefas com Supabase
+├── hooks/
+│   ├── useTasks.js            # CRUD + reordenação de tarefas com Supabase
+│   └── useTheme.js            # Tema claro/escuro com persistência em localStorage
 ├── pages/
 │   ├── LoginPage.jsx          # /login
 │   ├── RegisterPage.jsx       # /register
@@ -49,7 +54,7 @@ src/
 │   ├── ResetPasswordPage.jsx  # /reset-password
 │   └── TaskPage.jsx           # /task?id=UUID
 └── components/
-    ├── features/              # Componentes com lógica de domínio
+    ├── tasks/                 # Componentes de domínio de tarefas
     │   ├── AddTask.jsx
     │   ├── TaskList.jsx
     │   ├── TaskItem.jsx
@@ -93,7 +98,7 @@ signOut()
 sendPasswordReset()
 ```
 
-O estado das tarefas é local ao hook `useTasks`, instanciado em `App.jsx`. Não há Zustand, Redux ou MobX.
+O estado das tarefas é local ao hook `useTasks`, instanciado em `App.jsx`. O estado do tema é gerenciado via DOM (`document.documentElement`) pelo hook `useTheme`. Não há Zustand, Redux ou MobX.
 
 ---
 
@@ -103,15 +108,38 @@ Gerencia o estado completo das tarefas do usuário autenticado.
 
 | Campo | Tipo | Descrição |
 |---|---|---|
-| `tasks` | array | Lista no formato camelCase |
+| `tasks` | array | Lista no formato camelCase, ordenada por `position` |
 | `loading` | boolean | True durante carregamento inicial |
 | `error` | string\|null | Mensagem de erro do Supabase |
-| `addTask(title, desc, dueAt)` | async | Cria tarefa |
+| `addTask(title, desc, dueAt)` | async | Cria tarefa com próxima posição |
 | `toggleTask(taskId)` | async | Alterna `isCompleted` |
 | `editTask(id, title, desc, dueAt)` | async | Edita campos |
 | `deleteTask(taskId)` | async | Exclui tarefa |
+| `reorderTasks(newOrderedTasks)` | async | Reordena otimisticamente + upsert de posições em lote |
 
-Na inicialização, migra tarefas do `localStorage` para o Supabase automaticamente (executa uma única vez; remove o localStorage após sucesso).
+Na inicialização, migra tarefas do `localStorage` para o Supabase automaticamente. Tarefas com `position = null` (existentes antes da feature) recebem posições sequenciais automaticamente na primeira carga.
+
+---
+
+## Hook `useTheme`
+
+Gerencia o tema claro/escuro da aplicação.
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `theme` | `'light' \| 'dark'` | Tema atual |
+| `isDark` | boolean | Atalho para `theme === 'dark'` |
+| `toggleTheme()` | função | Alterna entre claro e escuro |
+
+**Funcionamento:**
+1. Na inicialização lê `localStorage.getItem('theme')`
+2. Se não houver preferência salva, usa `prefers-color-scheme` do sistema
+3. Aplica/remove a classe `dark` em `document.documentElement`
+4. Persiste a escolha no `localStorage`
+
+Um script inline no `index.html` aplica a classe antes do React montar, evitando flash do tema errado (FOUC).
+
+O botão de toggle (Sun/Moon) fica no header do `App.jsx`. Páginas de autenticação recebem o tema via classe já aplicada no `<html>` pelo script inline — sem necessidade de chamar o hook nelas.
 
 ---
 
@@ -128,6 +156,7 @@ Na inicialização, migra tarefas do `localStorage` para o Supabase automaticame
 | `is_completed` | boolean | `false` | Status de conclusão |
 | `created_at` | timestamptz | `now()` | Criação (UTC) |
 | `due_at` | timestamptz | null | Prazo opcional (UTC) |
+| `position` | integer | null | Ordem de exibição (null = sem posição definida) |
 
 ### Tabela `user_settings`
 
@@ -173,11 +202,13 @@ O `access_token` expira em 1h; o SDK renova automaticamente via `refresh_token`.
 ## Operações de dados (API Supabase)
 
 ```js
-// Listar tarefas
-supabase.from("tasks").select("*").order("created_at", { ascending: true })
+// Listar tarefas (ordenado por posição)
+supabase.from("tasks").select("*")
+  .order("position", { ascending: true, nullsFirst: false })
+  .order("created_at", { ascending: true })
 
-// Criar
-supabase.from("tasks").insert({ user_id, title, description, due_at }).select().single()
+// Criar (com posição)
+supabase.from("tasks").insert({ user_id, title, description, due_at, position }).select().single()
 
 // Editar
 supabase.from("tasks").update({ title, description, due_at }).eq("id", taskId)
@@ -188,11 +219,11 @@ supabase.from("tasks").update({ is_completed: boolean }).eq("id", taskId)
 // Excluir
 supabase.from("tasks").delete().eq("id", taskId)
 
+// Reordenar (upsert em lote)
+supabase.from("tasks").upsert([{ id, position }, ...], { onConflict: "id" })
+
 // Título da lista — upsert
 supabase.from("user_settings").upsert({ user_id, app_title }, { onConflict: "user_id" })
-
-// Migração do localStorage
-supabase.from("tasks").upsert(rows, { onConflict: "id" })
 ```
 
 O RLS garante que cada operação afeta somente os registros do usuário autenticado.
@@ -205,4 +236,6 @@ O RLS garante que cada operação afeta somente os registros do usuário autenti
 
 **`Input`** — detecta `type="datetime-local"` e usa padding reduzido (`px-2 sm:px-3`) para evitar overflow do seletor nativo em mobile.
 
-**`TaskItem`** — exibe prazo em vermelho se vencido e a tarefa não está concluída; índigo caso contrário.
+**`TaskItem`** — exibe prazo em vermelho se vencido e a tarefa não está concluída; índigo caso contrário. Quando `isDraggable=true`, exibe handle GripVertical à esquerda; integra `useSortable` do dnd-kit para animação de drag.
+
+**`TaskList`** — envolve a lista com `DndContext` e `SortableContext` do dnd-kit. Drag habilitado apenas no filtro "Todas" — em views filtradas o handle some e a lista é somente leitura. Usa `PointerSensor` (distância mínima de 8px) e `TouchSensor` (delay de 250ms) para evitar drags acidentais.

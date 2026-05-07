@@ -6,7 +6,8 @@ create table tasks (
   description text default '',
   is_completed boolean default false,
   created_at timestamptz default now(),
-  due_at timestamptz
+  due_at timestamptz,
+  position integer
 );
 
 -- Cada usuário só enxerga e manipula suas próprias tarefas
@@ -23,6 +24,10 @@ create policy "tasks: update próprio" on tasks
 
 create policy "tasks: delete próprio" on tasks
   for delete using (auth.uid() = user_id);
+
+-- Migration: ordenação manual de tarefas
+-- Execute no SQL Editor do Supabase caso a tabela já exista:
+-- ALTER TABLE tasks ADD COLUMN IF NOT EXISTS position integer;
 
 -- Tabela de configurações por usuário (título da lista)
 create table user_settings (
