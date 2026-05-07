@@ -29,7 +29,7 @@ function AddTask({ onAddTaskSubmit }) {
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-md p-5 flex flex-col gap-3">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-5 flex flex-col gap-3">
             <Input
                 type="text"
                 placeholder="Digite o título da tarefa"
@@ -56,8 +56,8 @@ function AddTask({ onAddTaskSubmit }) {
                 onClick={handleToggleDue}
                 className={`cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors w-fit ${
                     showDue
-                        ? "border-red-200 text-red-400 bg-red-50 hover:bg-red-100"
-                        : "border-indigo-200 text-indigo-500 bg-indigo-50 hover:bg-indigo-100"
+                        ? "border-red-200 dark:border-red-900 text-red-400 bg-red-50 dark:bg-red-950 hover:bg-red-100 dark:hover:bg-red-900"
+                        : "border-indigo-200 dark:border-indigo-800 text-indigo-500 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 hover:bg-indigo-100 dark:hover:bg-indigo-900"
                 }`}
             >
                 {showDue
