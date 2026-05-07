@@ -30,32 +30,32 @@ function TaskPage() {
     }).format(new Date(iso));
 
     return (
-        <div className="min-h-screen bg-slate-100 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="min-h-screen bg-slate-100 dark:bg-slate-900 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <div className="w-full max-w-lg mx-auto space-y-4">
                 <div className="flex items-center gap-3 py-2">
                     <button
                         onClick={() => navigate(-1)}
-                        className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-white shadow-sm text-slate-600 hover:text-indigo-600 transition-colors"
+                        className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-white dark:bg-slate-800 shadow-sm text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                         aria-label="Voltar"
                     >
                         <ChevronLeftIcon size={20} />
                     </button>
-                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Detalhes da Tarefa</h1>
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-100">Detalhes da Tarefa</h1>
                 </div>
 
                 {loading ? (
-                    <div className="bg-white rounded-xl shadow-md p-5 text-center text-slate-400 text-sm">
+                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-5 text-center text-slate-400 dark:text-slate-500 text-sm">
                         Carregando...
                     </div>
                 ) : task ? (
-                    <div className="bg-white rounded-xl shadow-md p-5 space-y-4">
+                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-5 space-y-4">
                         <div>
-                            <h2 className="text-lg font-bold text-slate-800">{task.title}</h2>
+                            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">{task.title}</h2>
                             {task.description && (
-                                <p className="text-slate-500 mt-1 text-sm">{task.description}</p>
+                                <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">{task.description}</p>
                             )}
                         </div>
-                        <div className="flex flex-col gap-2 pt-2 border-t border-slate-100">
+                        <div className="flex flex-col gap-2 pt-2 border-t border-slate-100 dark:border-slate-700">
                             <div className={`flex items-center gap-1.5 text-sm font-medium ${task.is_completed ? "text-indigo-600" : "text-slate-400"}`}>
                                 {task.is_completed
                                     ? <><CheckCircle2 size={16} /> Concluída</>
@@ -63,7 +63,7 @@ function TaskPage() {
                                 }
                             </div>
                             {task.created_at && (
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs text-slate-400 dark:text-slate-500">
                                     Criada em {fmt(task.created_at)}
                                 </p>
                             )}
@@ -80,7 +80,7 @@ function TaskPage() {
                         </div>
                     </div>
                 ) : (
-                    <div className="bg-white rounded-xl shadow-md p-5 text-center text-slate-400 text-sm">
+                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-5 text-center text-slate-400 dark:text-slate-500 text-sm">
                         Tarefa não encontrada.
                     </div>
                 )}

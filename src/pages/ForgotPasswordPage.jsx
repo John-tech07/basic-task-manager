@@ -31,19 +31,19 @@ function ForgotPasswordPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-100 flex items-start justify-center px-4 pt-16 sm:pt-24">
+        <div className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-start justify-center px-4 pt-16 sm:pt-24">
             <div className="w-full max-w-sm">
                 <div className="flex items-center justify-center gap-2 mb-8">
                     <ClipboardList className="text-indigo-600" size={28} />
-                    <span className="text-xl font-bold text-slate-800">Gerenciador de Tarefas</span>
+                    <span className="text-xl font-bold text-slate-800 dark:text-slate-100">Gerenciador de Tarefas</span>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8">
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 sm:p-8">
                     {done ? (
                         <div className="flex flex-col items-center gap-3 py-4 text-center">
                             <CheckCircle2 className="text-indigo-500" size={40} />
-                            <h2 className="text-lg font-bold text-slate-800">E-mail enviado</h2>
-                            <p className="text-sm text-slate-500">
+                            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">E-mail enviado</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
                                 Se esse e-mail estiver cadastrado, você receberá um link para redefinir sua senha.
                             </p>
                             <Link to="/login" className="text-indigo-600 hover:underline text-sm font-medium mt-2">
@@ -52,14 +52,14 @@ function ForgotPasswordPage() {
                         </div>
                     ) : (
                         <>
-                            <h2 className="text-lg font-bold text-slate-800 mb-2">Esqueci minha senha</h2>
-                            <p className="text-sm text-slate-400 mb-6">
+                            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">Esqueci minha senha</h2>
+                            <p className="text-sm text-slate-400 dark:text-slate-500 mb-6">
                                 Digite seu e-mail e enviaremos um link para redefinir sua senha.
                             </p>
 
                             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-600">E-mail</label>
+                                    <label className="text-sm font-medium text-slate-600 dark:text-slate-300">E-mail</label>
                                     <Input
                                         type="email"
                                         placeholder="seu@email.com"
@@ -85,7 +85,7 @@ function ForgotPasswordPage() {
                                 </button>
                             </form>
 
-                            <p className="mt-4 text-center text-sm text-slate-400">
+                            <p className="mt-4 text-center text-sm text-slate-400 dark:text-slate-500">
                                 <Link to="/login" className="text-indigo-600 hover:underline">
                                     Voltar para o login
                                 </Link>

@@ -6,7 +6,7 @@ function PrivateRoute({ children }) {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+            <div className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
                 <span className="text-slate-400 text-sm">Carregando...</span>
             </div>
         );

@@ -43,19 +43,19 @@ function RegisterPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-100 flex items-start justify-center px-4 pt-16 sm:pt-24">
+        <div className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-start justify-center px-4 pt-16 sm:pt-24">
             <div className="w-full max-w-sm">
                 <div className="flex items-center justify-center gap-2 mb-8">
                     <ClipboardList className="text-indigo-600" size={28} />
-                    <span className="text-xl font-bold text-slate-800">Gerenciador de Tarefas</span>
+                    <span className="text-xl font-bold text-slate-800 dark:text-slate-100">Gerenciador de Tarefas</span>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8">
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 sm:p-8">
                     {done ? (
                         <div className="flex flex-col items-center gap-3 py-4 text-center">
                             <CheckCircle2 className="text-indigo-500" size={40} />
-                            <h2 className="text-lg font-bold text-slate-800">Verifique seu e-mail</h2>
-                            <p className="text-sm text-slate-500">
+                            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Verifique seu e-mail</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
                                 Enviamos um link de confirmação para <strong>{email}</strong>.
                                 Clique no link para ativar sua conta.
                             </p>
@@ -65,11 +65,11 @@ function RegisterPage() {
                         </div>
                     ) : (
                         <>
-                            <h2 className="text-lg font-bold text-slate-800 mb-6">Criar conta</h2>
+                            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6">Criar conta</h2>
 
                             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-600">E-mail</label>
+                                    <label className="text-sm font-medium text-slate-600 dark:text-slate-300">E-mail</label>
                                     <Input
                                         type="email"
                                         placeholder="seu@email.com"
@@ -80,7 +80,7 @@ function RegisterPage() {
                                 </div>
 
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-600">Senha</label>
+                                    <label className="text-sm font-medium text-slate-600 dark:text-slate-300">Senha</label>
                                     <Input
                                         type="password"
                                         placeholder="Mínimo 6 caracteres"
@@ -91,7 +91,7 @@ function RegisterPage() {
                                 </div>
 
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-sm font-medium text-slate-600">Confirmar senha</label>
+                                    <label className="text-sm font-medium text-slate-600 dark:text-slate-300">Confirmar senha</label>
                                     <Input
                                         type="password"
                                         placeholder="Repita a senha"
@@ -117,7 +117,7 @@ function RegisterPage() {
                                 </button>
                             </form>
 
-                            <p className="mt-4 text-center text-sm text-slate-400">
+                            <p className="mt-4 text-center text-sm text-slate-400 dark:text-slate-500">
                                 Já tem conta?{" "}
                                 <Link to="/login" className="text-indigo-600 hover:underline font-medium">
                                     Entrar

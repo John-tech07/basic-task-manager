@@ -28,19 +28,19 @@ function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-100 flex items-start justify-center px-4 pt-16 sm:pt-24">
+        <div className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-start justify-center px-4 pt-16 sm:pt-24">
             <div className="w-full max-w-sm">
                 <div className="flex items-center justify-center gap-2 mb-8">
                     <ClipboardList className="text-indigo-600" size={28} />
-                    <span className="text-xl font-bold text-slate-800">Gerenciador de Tarefas</span>
+                    <span className="text-xl font-bold text-slate-800 dark:text-slate-100">Gerenciador de Tarefas</span>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-md p-6 sm:p-8">
-                    <h2 className="text-lg font-bold text-slate-800 mb-6">Entrar na conta</h2>
+                <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 sm:p-8">
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6">Entrar na conta</h2>
 
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-sm font-medium text-slate-600">E-mail</label>
+                            <label className="text-sm font-medium text-slate-600 dark:text-slate-300">E-mail</label>
                             <Input
                                 type="email"
                                 placeholder="seu@email.com"
@@ -51,7 +51,7 @@ function LoginPage() {
                         </div>
 
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-sm font-medium text-slate-600">Senha</label>
+                            <label className="text-sm font-medium text-slate-600 dark:text-slate-300">Senha</label>
                             <Input
                                 type="password"
                                 placeholder="••••••••"
@@ -81,7 +81,7 @@ function LoginPage() {
                         <Link to="/forgot-password" className="text-indigo-600 hover:underline">
                             Esqueci minha senha
                         </Link>
-                        <span className="text-slate-400">
+                        <span className="text-slate-400 dark:text-slate-500">
                             Não tem conta?{" "}
                             <Link to="/register" className="text-indigo-600 hover:underline font-medium">
                                 Cadastre-se
