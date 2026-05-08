@@ -1,7 +1,13 @@
-import { CalendarIcon, CheckCircle2, ChevronRightIcon, Circle, GripVertical, PencilIcon, TrashIcon } from "lucide-react";
+import { CalendarIcon, CheckCircle2, ChevronRightIcon, Circle, EllipsisVertical, GripVertical, PencilIcon, TrashIcon } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import Button from "../ui/Button";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 function TaskItem({ task, onToggle, onEdit, onSeeDetails, onDeleteRequest, isDraggable }) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -67,17 +73,34 @@ function TaskItem({ task, onToggle, onEdit, onSeeDetails, onDeleteRequest, isDra
                 </span>
             </button>
 
-            <div className="flex items-center gap-1 shrink-0">
-                <Button onClick={() => onEdit(task)} aria-label="Editar tarefa">
-                    <PencilIcon size={16} />
-                </Button>
-                <Button onClick={() => onSeeDetails(task)} aria-label="Ver detalhes">
-                    <ChevronRightIcon size={16} />
-                </Button>
-                <Button onClick={() => onDeleteRequest(task.id)} aria-label="Deletar tarefa">
-                    <TrashIcon size={16} />
-                </Button>
-            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <button
+                        className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                        aria-label="Ações da tarefa"
+                    >
+                        <EllipsisVertical size={16} />
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuItem onSelect={() => onEdit(task)}>
+                        <PencilIcon aria-hidden="true" />
+                        Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => onSeeDetails(task)}>
+                        <ChevronRightIcon aria-hidden="true" />
+                        Ver detalhes
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                        className="text-red-500 focus:bg-red-50 focus:text-red-500 dark:focus:bg-red-950 dark:focus:text-red-400"
+                        onSelect={() => onDeleteRequest(task.id)}
+                    >
+                        <TrashIcon aria-hidden="true" />
+                        Deletar
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
     );
 }
