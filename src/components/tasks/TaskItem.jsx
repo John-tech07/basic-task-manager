@@ -52,11 +52,6 @@ function TaskItem({ task, onToggle, onEdit, onSeeDetails, onDeleteRequest, isDra
                     }`}>
                         {task.title}
                     </span>
-                    {task.createdAt && (
-                        <span className="text-xs text-slate-400 dark:text-slate-500">
-                            {new Intl.DateTimeFormat("pt-BR").format(new Date(task.createdAt))}
-                        </span>
-                    )}
                     {task.dueAt && (
                         <span className={`text-xs flex items-center gap-1 mt-0.5 ${
                             !task.isCompleted && new Date(task.dueAt) < new Date()
