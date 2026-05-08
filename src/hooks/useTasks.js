@@ -71,7 +71,7 @@ export function useTasks() {
 
             const hasNullPositions = mapped.some(t => t.position === null);
             if (hasNullPositions) {
-                const updates = mapped.map((t, i) => ({ id: t.id, position: i + 1 }));
+                const updates = mapped.map((t, i) => ({ id: t.id, user_id: user.id, position: i + 1 }));
                 await supabase.from("tasks").upsert(updates, { onConflict: "id" });
                 mapped.forEach((t, i) => { t.position = i + 1; });
             }
@@ -133,8 +133,11 @@ export function useTasks() {
 
     async function reorderTasks(newOrderedTasks) {
         setTasks(newOrderedTasks);
-        const updates = newOrderedTasks.map((t, i) => ({ id: t.id, position: i + 1 }));
-        await supabase.from("tasks").upsert(updates, { onConflict: "id" });
+        await Promise.all(
+            newOrderedTasks.map((t, i) =>
+                supabase.from("tasks").update({ position: i + 1 }).eq("id", t.id)
+            )
+        );
     }
 
     return { tasks, loading, error, addTask, toggleTask, editTask, deleteTask, reorderTasks };

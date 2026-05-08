@@ -27,11 +27,7 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask, onReorder
     }
 
     if (!tasks.length) {
-        return (
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md">
-                <EmptyState message="Nenhuma tarefa ainda. Adicione uma acima!" />
-            </div>
-        );
+        return <EmptyState message="Nenhuma tarefa ainda. Adicione uma!" />;
     }
 
     const filteredTasks = tasks.filter(task => {
@@ -48,7 +44,7 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask, onReorder
     };
 
     return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden">
+        <div>
             <TaskFilters
                 filter={filter}
                 onFilterChange={setFilter}
@@ -61,7 +57,7 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask, onReorder
             ) : (
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={filteredTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-                        <ul className="divide-y divide-slate-100 dark:divide-slate-700 max-h-[60vh] overflow-y-auto">
+                        <ul className="divide-y divide-slate-100 dark:divide-slate-700 max-h-[50vh] overflow-y-auto">
                             {filteredTasks.map(task => (
                                 <li key={task.id} className="px-3 py-2 sm:p-3">
                                     {deletingId === task.id ? (
@@ -91,7 +87,8 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask, onReorder
                     </SortableContext>
                 </DndContext>
             )}
-            <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-2">
+
+            <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-2 border-t border-slate-100 dark:border-slate-700">
                 Tarefas concluídas são deletadas automaticamente após 7 dias.
             </p>
         </div>
