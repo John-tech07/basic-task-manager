@@ -1,8 +1,8 @@
-import { AlertCircle, CalendarIcon, Plus, XIcon } from "lucide-react";
+import { AlertCircle, CalendarIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import Input from "../ui/Input";
 
-function AddTask({ onAddTaskSubmit }) {
+function AddTask({ onAddTaskSubmit, onSuccess }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [dueAt, setDueAt] = useState("");
@@ -21,6 +21,7 @@ function AddTask({ onAddTaskSubmit }) {
         setDueAt("");
         setShowDue(false);
         setError("");
+        onSuccess?.();
     }
 
     function handleToggleDue() {
@@ -28,19 +29,26 @@ function AddTask({ onAddTaskSubmit }) {
         setDueAt("");
     }
 
+    function handleKeyDown(e) {
+        if (e.key === "Enter") handleSubmit();
+    }
+
     return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-5 flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
             <Input
                 type="text"
-                placeholder="Digite o título da tarefa"
+                placeholder="Título"
                 value={title}
                 onChange={(e) => { setTitle(e.target.value); setError(""); }}
+                onKeyDown={handleKeyDown}
+                autoFocus
             />
             <Input
                 type="text"
                 placeholder="Descrição (opcional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
 
             {showDue && (
@@ -72,11 +80,11 @@ function AddTask({ onAddTaskSubmit }) {
                     {error}
                 </p>
             )}
+
             <button
                 onClick={handleSubmit}
-                className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full min-h-[44px] px-4 py-3 rounded-lg text-sm sm:text-base font-semibold flex items-center justify-center gap-2 transition-colors"
+                className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full min-h-[44px] px-4 py-3 rounded-lg text-sm font-semibold transition-colors mt-1"
             >
-                <Plus size={18} />
                 Adicionar tarefa
             </button>
         </div>
