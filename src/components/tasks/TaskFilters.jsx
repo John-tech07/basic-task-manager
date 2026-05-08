@@ -1,5 +1,6 @@
 const FILTERS = [
     { value: "all",       label: "Todas"      },
+    { value: "today",     label: "Hoje"       },
     { value: "pending",   label: "Pendentes"  },
     { value: "completed", label: "Concluídas" },
 ];

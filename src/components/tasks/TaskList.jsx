@@ -33,12 +33,25 @@ function TaskList({ tasks, onTaskClick, onDeleteTaskClick, onEditTask, onReorder
     const filteredTasks = tasks.filter(task => {
         if (filter === "pending")   return !task.isCompleted;
         if (filter === "completed") return task.isCompleted;
+        if (filter === "today") {
+            if (!task.dueAt) return false;
+            const due   = new Date(task.dueAt);
+            const today = new Date();
+            return due.getFullYear() === today.getFullYear() &&
+                   due.getMonth()    === today.getMonth()    &&
+                   due.getDate()     === today.getDate();
+        }
         return true;
     });
+
+    if (filter === "today") {
+        filteredTasks.sort((a, b) => new Date(a.dueAt) - new Date(b.dueAt));
+    }
 
     const isDraggable = filter === "all";
 
     const emptyMessages = {
+        today:     "Nenhuma tarefa com prazo para hoje.",
         pending:   "Nenhuma tarefa pendente.",
         completed: "Nenhuma tarefa concluída.",
     };
